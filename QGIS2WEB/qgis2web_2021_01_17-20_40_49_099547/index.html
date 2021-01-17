@@ -1,0 +1,788 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="initial-scale=1,user-scalable=no,maximum-scale=1,width=device-width">
+        <meta name="mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <link rel="stylesheet" href="css/leaflet.css">
+        <link rel="stylesheet" href="css/qgis2web.css"><link rel="stylesheet" href="css/fontawesome-all.min.css">
+        <link rel="stylesheet" href="css/leaflet-search.css">
+        <link rel="stylesheet" href="css/leaflet-measure.css">
+        <style>
+        html, body, #map {
+            width: 100%;
+            height: 100%;
+            padding: 0;
+            margin: 0;
+        }
+        </style>
+        <title></title>
+    </head>
+    <body>
+        <div id="map">
+        </div>
+        <script src="js/qgis2web_expressions.js"></script>
+        <script src="js/leaflet.js"></script>
+        <script src="js/leaflet.rotatedMarker.js"></script>
+        <script src="js/leaflet.pattern.js"></script>
+        <script src="js/leaflet-hash.js"></script>
+        <script src="js/Autolinker.min.js"></script>
+        <script src="js/rbush.min.js"></script>
+        <script src="js/labelgun.min.js"></script>
+        <script src="js/labels.js"></script>
+        <script src="js/leaflet-measure.js"></script>
+        <script src="js/leaflet-search.js"></script>
+        <script src="data/LondonBoroughs1_1.js"></script>
+        <script>
+        var highlightLayer;
+        function highlightFeature(e) {
+            highlightLayer = e.target;
+            highlightLayer.openPopup();
+        }
+        var map = L.map('map', {
+            zoomControl:true, maxZoom:28, minZoom:1
+        })
+        var hash = new L.Hash(map);
+        map.attributionControl.setPrefix('<a href="https://github.com/tomchadwin/qgis2web" target="_blank">qgis2web</a> &middot; <a href="https://leafletjs.com" title="A JS library for interactive maps">Leaflet</a> &middot; <a href="https://qgis.org">QGIS</a>');
+        var autolinker = new Autolinker({truncate: {length: 30, location: 'smart'}});
+        var measureControl = new L.Control.Measure({
+            position: 'topleft',
+            primaryLengthUnit: 'meters',
+            secondaryLengthUnit: 'kilometers',
+            primaryAreaUnit: 'sqmeters',
+            secondaryAreaUnit: 'hectares'
+        });
+        measureControl.addTo(map);
+        document.getElementsByClassName('leaflet-control-measure-toggle')[0]
+        .innerHTML = '';
+        document.getElementsByClassName('leaflet-control-measure-toggle')[0]
+        .className += ' fas fa-ruler';
+        var bounds_group = new L.featureGroup([]);
+        function setBounds() {
+            if (bounds_group.getLayers().length) {
+                map.fitBounds(bounds_group.getBounds());
+            }
+            map.setMaxBounds(map.getBounds());
+        }
+        map.createPane('pane_GoogleMaps_0');
+        map.getPane('pane_GoogleMaps_0').style.zIndex = 400;
+        var layer_GoogleMaps_0 = L.tileLayer('http://mt1.google.com/vt/lyrs=m&x={x}&y={y}&z={z}', {
+            pane: 'pane_GoogleMaps_0',
+            opacity: 1.0,
+            attribution: '',
+            minZoom: 1,
+            maxZoom: 28,
+            minNativeZoom: 0,
+            maxNativeZoom: 22
+        });
+        layer_GoogleMaps_0;
+        map.addLayer(layer_GoogleMaps_0);
+        function pop_LondonBoroughs1_1(feature, layer) {
+            layer.on({
+                mouseout: function(e) {
+                    if (typeof layer.closePopup == 'function') {
+                        layer.closePopup();
+                    } else {
+                        layer.eachLayer(function(feature){
+                            feature.closePopup()
+                        });
+                    }
+                },
+                mouseover: highlightFeature,
+            });
+            var popupContent = '<table>\
+                    <tr>\
+                        <td colspan="2"><strong>name</strong><br />' + (feature.properties['name'] !== null ? autolinker.link(feature.properties['name'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                </table>';
+            layer.bindPopup(popupContent, {maxHeight: 400});
+        }
+
+        function style_LondonBoroughs1_1_0(feature) {
+            switch(String(feature.properties['name'])) {
+                case 'Barking and Dagenham':
+                    return {
+                pane: 'pane_LondonBoroughs1_1',
+                opacity: 1,
+                color: 'rgba(9,120,204,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(192,240,102,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Barnet':
+                    return {
+                pane: 'pane_LondonBoroughs1_1',
+                opacity: 1,
+                color: 'rgba(9,120,204,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(71,238,219,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Bexley':
+                    return {
+                pane: 'pane_LondonBoroughs1_1',
+                opacity: 1,
+                color: 'rgba(9,120,204,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(152,235,100,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Brent':
+                    return {
+                pane: 'pane_LondonBoroughs1_1',
+                opacity: 1,
+                color: 'rgba(9,120,204,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(221,226,117,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Bromley':
+                    return {
+                pane: 'pane_LondonBoroughs1_1',
+                opacity: 1,
+                color: 'rgba(9,120,204,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(221,189,83,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Camden':
+                    return {
+                pane: 'pane_LondonBoroughs1_1',
+                opacity: 1,
+                color: 'rgba(9,120,204,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(179,206,70,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'City of London':
+                    return {
+                pane: 'pane_LondonBoroughs1_1',
+                opacity: 1,
+                color: 'rgba(9,120,204,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(140,219,55,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'City of Westminster':
+                    return {
+                pane: 'pane_LondonBoroughs1_1',
+                opacity: 1,
+                color: 'rgba(9,120,204,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(80,212,235,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Croydon':
+                    return {
+                pane: 'pane_LondonBoroughs1_1',
+                opacity: 1,
+                color: 'rgba(9,120,204,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(200,193,117,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Ealing':
+                    return {
+                pane: 'pane_LondonBoroughs1_1',
+                opacity: 1,
+                color: 'rgba(9,120,204,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(227,100,125,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Enfield':
+                    return {
+                pane: 'pane_LondonBoroughs1_1',
+                opacity: 1,
+                color: 'rgba(9,120,204,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(156,54,203,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Epsom and Ewell':
+                    return {
+                pane: 'pane_LondonBoroughs1_1',
+                opacity: 1,
+                color: 'rgba(9,120,204,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(43,206,141,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Epsom and Ewell District (B)':
+                    return {
+                pane: 'pane_LondonBoroughs1_1',
+                opacity: 1,
+                color: 'rgba(9,120,204,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(96,137,239,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Greenwich':
+                    return {
+                pane: 'pane_LondonBoroughs1_1',
+                opacity: 1,
+                color: 'rgba(9,120,204,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(106,90,210,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Hackney':
+                    return {
+                pane: 'pane_LondonBoroughs1_1',
+                opacity: 1,
+                color: 'rgba(9,120,204,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(222,144,239,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Hammersmith and Fulham':
+                    return {
+                pane: 'pane_LondonBoroughs1_1',
+                opacity: 1,
+                color: 'rgba(9,120,204,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(152,100,229,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Hammersmith and Fulham London Boro':
+                    return {
+                pane: 'pane_LondonBoroughs1_1',
+                opacity: 1,
+                color: 'rgba(9,120,204,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(201,144,44,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Haringey':
+                    return {
+                pane: 'pane_LondonBoroughs1_1',
+                opacity: 1,
+                color: 'rgba(9,120,204,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(74,223,28,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Harrow':
+                    return {
+                pane: 'pane_LondonBoroughs1_1',
+                opacity: 1,
+                color: 'rgba(9,120,204,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(200,93,145,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Havering':
+                    return {
+                pane: 'pane_LondonBoroughs1_1',
+                opacity: 1,
+                color: 'rgba(9,120,204,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(41,111,202,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Hillingdon':
+                    return {
+                pane: 'pane_LondonBoroughs1_1',
+                opacity: 1,
+                color: 'rgba(9,120,204,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(14,197,200,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Hounslow':
+                    return {
+                pane: 'pane_LondonBoroughs1_1',
+                opacity: 1,
+                color: 'rgba(9,120,204,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(53,239,112,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Islington':
+                    return {
+                pane: 'pane_LondonBoroughs1_1',
+                opacity: 1,
+                color: 'rgba(9,120,204,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(124,141,238,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Kensington and Chelsea':
+                    return {
+                pane: 'pane_LondonBoroughs1_1',
+                opacity: 1,
+                color: 'rgba(9,120,204,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(236,185,134,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Kensington and Chelsea London Boro':
+                    return {
+                pane: 'pane_LondonBoroughs1_1',
+                opacity: 1,
+                color: 'rgba(9,120,204,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(227,76,34,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Kingston upon Thames':
+                    return {
+                pane: 'pane_LondonBoroughs1_1',
+                opacity: 1,
+                color: 'rgba(9,120,204,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(141,50,215,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Kingston upon Thames London Boro':
+                    return {
+                pane: 'pane_LondonBoroughs1_1',
+                opacity: 1,
+                color: 'rgba(9,120,204,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(222,75,188,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Lambeth':
+                    return {
+                pane: 'pane_LondonBoroughs1_1',
+                opacity: 1,
+                color: 'rgba(9,120,204,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(210,95,199,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Lambeth London Boro':
+                    return {
+                pane: 'pane_LondonBoroughs1_1',
+                opacity: 1,
+                color: 'rgba(9,120,204,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(49,216,124,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Lewisham':
+                    return {
+                pane: 'pane_LondonBoroughs1_1',
+                opacity: 1,
+                color: 'rgba(9,120,204,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(72,156,220,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Merton':
+                    return {
+                pane: 'pane_LondonBoroughs1_1',
+                opacity: 1,
+                color: 'rgba(9,120,204,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(116,117,214,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Merton London Boro':
+                    return {
+                pane: 'pane_LondonBoroughs1_1',
+                opacity: 1,
+                color: 'rgba(9,120,204,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(238,47,114,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Newham':
+                    return {
+                pane: 'pane_LondonBoroughs1_1',
+                opacity: 1,
+                color: 'rgba(9,120,204,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(227,59,44,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Redbridge':
+                    return {
+                pane: 'pane_LondonBoroughs1_1',
+                opacity: 1,
+                color: 'rgba(9,120,204,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(108,216,128,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Richmond upon Thames':
+                    return {
+                pane: 'pane_LondonBoroughs1_1',
+                opacity: 1,
+                color: 'rgba(9,120,204,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(15,164,227,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Southwark':
+                    return {
+                pane: 'pane_LondonBoroughs1_1',
+                opacity: 1,
+                color: 'rgba(9,120,204,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(216,86,95,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Sutton':
+                    return {
+                pane: 'pane_LondonBoroughs1_1',
+                opacity: 1,
+                color: 'rgba(9,120,204,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(236,152,106,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Sutton London Boro':
+                    return {
+                pane: 'pane_LondonBoroughs1_1',
+                opacity: 1,
+                color: 'rgba(9,120,204,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(206,25,212,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Tower Hamlets':
+                    return {
+                pane: 'pane_LondonBoroughs1_1',
+                opacity: 1,
+                color: 'rgba(9,120,204,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(239,15,153,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Waltham Forest':
+                    return {
+                pane: 'pane_LondonBoroughs1_1',
+                opacity: 1,
+                color: 'rgba(9,120,204,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(88,230,72,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Wandsworth':
+                    return {
+                pane: 'pane_LondonBoroughs1_1',
+                opacity: 1,
+                color: 'rgba(9,120,204,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(39,201,44,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Wandsworth London Boro':
+                    return {
+                pane: 'pane_LondonBoroughs1_1',
+                opacity: 1,
+                color: 'rgba(9,120,204,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(74,239,195,1.0)',
+                interactive: true,
+            }
+                    break;
+                default:
+                    return {
+                pane: 'pane_LondonBoroughs1_1',
+                opacity: 1,
+                color: 'rgba(9,120,204,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(95,42,239,1.0)',
+                interactive: true,
+            }
+                    break;
+            }
+        }
+        map.createPane('pane_LondonBoroughs1_1');
+        map.getPane('pane_LondonBoroughs1_1').style.zIndex = 401;
+        map.getPane('pane_LondonBoroughs1_1').style['mix-blend-mode'] = 'normal';
+        var layer_LondonBoroughs1_1 = new L.geoJson(json_LondonBoroughs1_1, {
+            attribution: '',
+            interactive: true,
+            dataVar: 'json_LondonBoroughs1_1',
+            layerName: 'layer_LondonBoroughs1_1',
+            pane: 'pane_LondonBoroughs1_1',
+            onEachFeature: pop_LondonBoroughs1_1,
+            style: style_LondonBoroughs1_1_0,
+        });
+        bounds_group.addLayer(layer_LondonBoroughs1_1);
+        map.addLayer(layer_LondonBoroughs1_1);
+        var baseMaps = {};
+        L.control.layers(baseMaps,{'London Boroughs1<br /><table><tr><td style="text-align: center;"><img src="legend/LondonBoroughs1_1_BarkingandDagenham0.png" /></td><td>Barking and Dagenham</td></tr><tr><td style="text-align: center;"><img src="legend/LondonBoroughs1_1_Barnet1.png" /></td><td>Barnet</td></tr><tr><td style="text-align: center;"><img src="legend/LondonBoroughs1_1_Bexley2.png" /></td><td>Bexley</td></tr><tr><td style="text-align: center;"><img src="legend/LondonBoroughs1_1_Brent3.png" /></td><td>Brent</td></tr><tr><td style="text-align: center;"><img src="legend/LondonBoroughs1_1_Bromley4.png" /></td><td>Bromley</td></tr><tr><td style="text-align: center;"><img src="legend/LondonBoroughs1_1_Camden5.png" /></td><td>Camden</td></tr><tr><td style="text-align: center;"><img src="legend/LondonBoroughs1_1_CityofLondon6.png" /></td><td>City of London</td></tr><tr><td style="text-align: center;"><img src="legend/LondonBoroughs1_1_CityofWestminster7.png" /></td><td>City of Westminster</td></tr><tr><td style="text-align: center;"><img src="legend/LondonBoroughs1_1_Croydon8.png" /></td><td>Croydon</td></tr><tr><td style="text-align: center;"><img src="legend/LondonBoroughs1_1_Ealing9.png" /></td><td>Ealing</td></tr><tr><td style="text-align: center;"><img src="legend/LondonBoroughs1_1_Enfield10.png" /></td><td>Enfield</td></tr><tr><td style="text-align: center;"><img src="legend/LondonBoroughs1_1_EpsomandEwell11.png" /></td><td>Epsom and Ewell</td></tr><tr><td style="text-align: center;"><img src="legend/LondonBoroughs1_1_EpsomandEwellDistrictB12.png" /></td><td>Epsom and Ewell District (B)</td></tr><tr><td style="text-align: center;"><img src="legend/LondonBoroughs1_1_Greenwich13.png" /></td><td>Greenwich</td></tr><tr><td style="text-align: center;"><img src="legend/LondonBoroughs1_1_Hackney14.png" /></td><td>Hackney</td></tr><tr><td style="text-align: center;"><img src="legend/LondonBoroughs1_1_HammersmithandFulham15.png" /></td><td>Hammersmith and Fulham</td></tr><tr><td style="text-align: center;"><img src="legend/LondonBoroughs1_1_HammersmithandFulhamLondonBoro16.png" /></td><td>Hammersmith and Fulham London Boro</td></tr><tr><td style="text-align: center;"><img src="legend/LondonBoroughs1_1_Haringey17.png" /></td><td>Haringey</td></tr><tr><td style="text-align: center;"><img src="legend/LondonBoroughs1_1_Harrow18.png" /></td><td>Harrow</td></tr><tr><td style="text-align: center;"><img src="legend/LondonBoroughs1_1_Havering19.png" /></td><td>Havering</td></tr><tr><td style="text-align: center;"><img src="legend/LondonBoroughs1_1_Hillingdon20.png" /></td><td>Hillingdon</td></tr><tr><td style="text-align: center;"><img src="legend/LondonBoroughs1_1_Hounslow21.png" /></td><td>Hounslow</td></tr><tr><td style="text-align: center;"><img src="legend/LondonBoroughs1_1_Islington22.png" /></td><td>Islington</td></tr><tr><td style="text-align: center;"><img src="legend/LondonBoroughs1_1_KensingtonandChelsea23.png" /></td><td>Kensington and Chelsea</td></tr><tr><td style="text-align: center;"><img src="legend/LondonBoroughs1_1_KensingtonandChelseaLondonBoro24.png" /></td><td>Kensington and Chelsea London Boro</td></tr><tr><td style="text-align: center;"><img src="legend/LondonBoroughs1_1_KingstonuponThames25.png" /></td><td>Kingston upon Thames</td></tr><tr><td style="text-align: center;"><img src="legend/LondonBoroughs1_1_KingstonuponThamesLondonBoro26.png" /></td><td>Kingston upon Thames London Boro</td></tr><tr><td style="text-align: center;"><img src="legend/LondonBoroughs1_1_Lambeth27.png" /></td><td>Lambeth</td></tr><tr><td style="text-align: center;"><img src="legend/LondonBoroughs1_1_LambethLondonBoro28.png" /></td><td>Lambeth London Boro</td></tr><tr><td style="text-align: center;"><img src="legend/LondonBoroughs1_1_Lewisham29.png" /></td><td>Lewisham</td></tr><tr><td style="text-align: center;"><img src="legend/LondonBoroughs1_1_Merton30.png" /></td><td>Merton</td></tr><tr><td style="text-align: center;"><img src="legend/LondonBoroughs1_1_MertonLondonBoro31.png" /></td><td>Merton London Boro</td></tr><tr><td style="text-align: center;"><img src="legend/LondonBoroughs1_1_Newham32.png" /></td><td>Newham</td></tr><tr><td style="text-align: center;"><img src="legend/LondonBoroughs1_1_Redbridge33.png" /></td><td>Redbridge</td></tr><tr><td style="text-align: center;"><img src="legend/LondonBoroughs1_1_RichmonduponThames34.png" /></td><td>Richmond upon Thames</td></tr><tr><td style="text-align: center;"><img src="legend/LondonBoroughs1_1_Southwark35.png" /></td><td>Southwark</td></tr><tr><td style="text-align: center;"><img src="legend/LondonBoroughs1_1_Sutton36.png" /></td><td>Sutton</td></tr><tr><td style="text-align: center;"><img src="legend/LondonBoroughs1_1_SuttonLondonBoro37.png" /></td><td>Sutton London Boro</td></tr><tr><td style="text-align: center;"><img src="legend/LondonBoroughs1_1_TowerHamlets38.png" /></td><td>Tower Hamlets</td></tr><tr><td style="text-align: center;"><img src="legend/LondonBoroughs1_1_WalthamForest39.png" /></td><td>Waltham Forest</td></tr><tr><td style="text-align: center;"><img src="legend/LondonBoroughs1_1_Wandsworth40.png" /></td><td>Wandsworth</td></tr><tr><td style="text-align: center;"><img src="legend/LondonBoroughs1_1_WandsworthLondonBoro41.png" /></td><td>Wandsworth London Boro</td></tr><tr><td style="text-align: center;"><img src="legend/LondonBoroughs1_1_42.png" /></td><td></td></tr></table>': layer_LondonBoroughs1_1,"Google Maps": layer_GoogleMaps_0,}).addTo(map);
+        setBounds();
+        map.addControl(new L.Control.Search({
+            layer: layer_LondonBoroughs1_1,
+            initial: false,
+            hideMarkerOnCollapse: true,
+            propertyName: 'name'}));
+        document.getElementsByClassName('search-button')[0].className +=
+         ' fa fa-binoculars';
+        resetLabels([layer_LondonBoroughs1_1]);
+        map.on("zoomend", function(){
+            resetLabels([layer_LondonBoroughs1_1]);
+        });
+        map.on("layeradd", function(){
+            resetLabels([layer_LondonBoroughs1_1]);
+        });
+        map.on("layerremove", function(){
+            resetLabels([layer_LondonBoroughs1_1]);
+        });
+        </script>
+    </body>
+</html>

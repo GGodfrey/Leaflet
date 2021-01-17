@@ -1,0 +1,223 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="initial-scale=1,user-scalable=no,maximum-scale=1,width=device-width">
+        <meta name="mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <link rel="stylesheet" href="css/leaflet.css">
+        <link rel="stylesheet" href="css/qgis2web.css"><link rel="stylesheet" href="css/fontawesome-all.min.css">
+        <link rel="stylesheet" href="css/leaflet-measure.css">
+        <style>
+        html, body, #map {
+            width: 100%;
+            height: 100%;
+            padding: 0;
+            margin: 0;
+        }
+        </style>
+        <title></title>
+    </head>
+    <body>
+        <div id="map">
+        </div>
+        <script src="js/qgis2web_expressions.js"></script>
+        <script src="js/leaflet.js"></script>
+        <script src="js/leaflet.rotatedMarker.js"></script>
+        <script src="js/leaflet.pattern.js"></script>
+        <script src="js/leaflet-hash.js"></script>
+        <script src="js/Autolinker.min.js"></script>
+        <script src="js/rbush.min.js"></script>
+        <script src="js/labelgun.min.js"></script>
+        <script src="js/labels.js"></script>
+        <script src="js/leaflet-measure.js"></script>
+        <script src="data/TowerHamletsBoundary_1.js"></script>
+        <script src="data/TowerHamletsCycleParking_2.js"></script>
+        <script>
+        var map = L.map('map', {
+            zoomControl:true, maxZoom:1, minZoom:1
+        })
+        var hash = new L.Hash(map);
+        map.attributionControl.setPrefix('<a href="https://github.com/tomchadwin/qgis2web" target="_blank">qgis2web</a> &middot; <a href="https://leafletjs.com" title="A JS library for interactive maps">Leaflet</a> &middot; <a href="https://qgis.org">QGIS</a>');
+        var autolinker = new Autolinker({truncate: {length: 30, location: 'smart'}});
+        var measureControl = new L.Control.Measure({
+            position: 'topleft',
+            primaryLengthUnit: 'meters',
+            secondaryLengthUnit: 'kilometers',
+            primaryAreaUnit: 'sqmeters',
+            secondaryAreaUnit: 'hectares'
+        });
+        measureControl.addTo(map);
+        document.getElementsByClassName('leaflet-control-measure-toggle')[0]
+        .innerHTML = '';
+        document.getElementsByClassName('leaflet-control-measure-toggle')[0]
+        .className += ' fas fa-ruler';
+        var bounds_group = new L.featureGroup([]);
+        function setBounds() {
+            if (bounds_group.getLayers().length) {
+                map.fitBounds(bounds_group.getBounds());
+            }
+            map.setMaxBounds(map.getBounds());
+        }
+        map.createPane('pane_GoogleMaps_0');
+        map.getPane('pane_GoogleMaps_0').style.zIndex = 400;
+        var layer_GoogleMaps_0 = L.tileLayer('http://mt1.google.com/vt/lyrs=m&x={x}&y={y}&z={z}', {
+            pane: 'pane_GoogleMaps_0',
+            opacity: 1.0,
+            attribution: '',
+            minZoom: 6,
+            maxZoom: 28,
+            minNativeZoom: 0,
+            maxNativeZoom: 22
+        });
+        layer_GoogleMaps_0;
+        map.addLayer(layer_GoogleMaps_0);
+        function pop_TowerHamletsBoundary_1(feature, layer) {
+            var popupContent = '<table>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['name'] !== null ? autolinker.link(feature.properties['name'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                </table>';
+            layer.bindPopup(popupContent, {maxHeight: 400});
+        }
+
+        function style_TowerHamletsBoundary_1_0() {
+            return {
+                pane: 'pane_TowerHamletsBoundary_1',
+                opacity: 1,
+                color: 'rgba(1,98,255,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 2.0, 
+                fillOpacity: 0,
+                interactive: false,
+            }
+        }
+        map.createPane('pane_TowerHamletsBoundary_1');
+        map.getPane('pane_TowerHamletsBoundary_1').style.zIndex = 401;
+        map.getPane('pane_TowerHamletsBoundary_1').style['mix-blend-mode'] = 'normal';
+        var layer_TowerHamletsBoundary_1 = new L.geoJson(json_TowerHamletsBoundary_1, {
+            attribution: '',
+            interactive: false,
+            dataVar: 'json_TowerHamletsBoundary_1',
+            layerName: 'layer_TowerHamletsBoundary_1',
+            pane: 'pane_TowerHamletsBoundary_1',
+            onEachFeature: pop_TowerHamletsBoundary_1,
+            style: style_TowerHamletsBoundary_1_0,
+        });
+        bounds_group.addLayer(layer_TowerHamletsBoundary_1);
+        map.addLayer(layer_TowerHamletsBoundary_1);
+        function pop_TowerHamletsCycleParking_2(feature, layer) {
+            var popupContent = '<table>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['FEATURE_ID'] !== null ? autolinker.link(feature.properties['FEATURE_ID'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['SVDATE'] !== null ? autolinker.link(feature.properties['SVDATE'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['PRK_CARR'] !== null ? autolinker.link(feature.properties['PRK_CARR'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['PRK_COVER'] !== null ? autolinker.link(feature.properties['PRK_COVER'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['PRK_SECURE'] !== null ? autolinker.link(feature.properties['PRK_SECURE'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['PRK_LOCKER'] !== null ? autolinker.link(feature.properties['PRK_LOCKER'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['PRK_SHEFF'] !== null ? autolinker.link(feature.properties['PRK_SHEFF'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['PRK_MSTAND'] !== null ? autolinker.link(feature.properties['PRK_MSTAND'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['PRK_PSTAND'] !== null ? autolinker.link(feature.properties['PRK_PSTAND'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['PRK_HOOP'] !== null ? autolinker.link(feature.properties['PRK_HOOP'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['PRK_POST'] !== null ? autolinker.link(feature.properties['PRK_POST'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['PRK_BUTERF'] !== null ? autolinker.link(feature.properties['PRK_BUTERF'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['PRK_WHEEL'] !== null ? autolinker.link(feature.properties['PRK_WHEEL'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['PRK_HANGAR'] !== null ? autolinker.link(feature.properties['PRK_HANGAR'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['PRK_TIER'] !== null ? autolinker.link(feature.properties['PRK_TIER'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['PRK_OTHER'] !== null ? autolinker.link(feature.properties['PRK_OTHER'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['PRK_PROVIS'] !== null ? autolinker.link(feature.properties['PRK_PROVIS'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['PRK_CPT'] !== null ? autolinker.link(feature.properties['PRK_CPT'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['BOROUGH'] !== null ? autolinker.link(feature.properties['BOROUGH'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">PHOTO1_URL</th>\
+                        <td>' + (feature.properties['PHOTO1_URL'] !== null ? autolinker.link(feature.properties['PHOTO1_URL'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['PHOTO2_URL'] !== null ? autolinker.link(feature.properties['PHOTO2_URL'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                </table>';
+            layer.bindPopup(popupContent, {maxHeight: 400});
+        }
+
+        function style_TowerHamletsCycleParking_2_0() {
+            return {
+                pane: 'pane_TowerHamletsCycleParking_2',
+                radius: 2.0,
+                opacity: 1,
+                color: 'rgba(255,255,255,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(219,30,42,1.0)',
+                interactive: true,
+            }
+        }
+        map.createPane('pane_TowerHamletsCycleParking_2');
+        map.getPane('pane_TowerHamletsCycleParking_2').style.zIndex = 402;
+        map.getPane('pane_TowerHamletsCycleParking_2').style['mix-blend-mode'] = 'normal';
+        var layer_TowerHamletsCycleParking_2 = new L.geoJson(json_TowerHamletsCycleParking_2, {
+            attribution: '',
+            interactive: true,
+            dataVar: 'json_TowerHamletsCycleParking_2',
+            layerName: 'layer_TowerHamletsCycleParking_2',
+            pane: 'pane_TowerHamletsCycleParking_2',
+            onEachFeature: pop_TowerHamletsCycleParking_2,
+            pointToLayer: function (feature, latlng) {
+                var context = {
+                    feature: feature,
+                    variables: {}
+                };
+                return L.circleMarker(latlng, style_TowerHamletsCycleParking_2_0(feature));
+            },
+        });
+        bounds_group.addLayer(layer_TowerHamletsCycleParking_2);
+        map.addLayer(layer_TowerHamletsCycleParking_2);
+        var baseMaps = {};
+        L.control.layers(baseMaps,{'<img src="legend/TowerHamletsCycleParking_2.png" /> Tower Hamlets Cycle Parking': layer_TowerHamletsCycleParking_2,'<img src="legend/TowerHamletsBoundary_1.png" /> Tower Hamlets Boundary': layer_TowerHamletsBoundary_1,"Google Maps": layer_GoogleMaps_0,},{collapsed:false}).addTo(map);
+        setBounds();
+        </script>
+    </body>
+</html>
